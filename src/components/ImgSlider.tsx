@@ -3,7 +3,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 
-const ImgSlider = (props) => {
+const ImgSlider = () => {
   let settings = {
     dots: true,
     infinite: true,
@@ -15,27 +15,27 @@ const ImgSlider = (props) => {
   return (
     <Carousel {...settings}>
       <Wrap>
-        <a>
+        <span>
           <img src="/images/slider-badging.jpg" alt="" />
-        </a>
+        </span>
       </Wrap>
 
       <Wrap>
-        <a>
+        <span>
           <img src="/images/slider-scale.jpg" alt="" />
-        </a>
+        </span>
       </Wrap>
 
       <Wrap>
-        <a>
+        <span>
           <img src="/images/slider-badag.jpg" alt="" />
-        </a>
+        </span>
       </Wrap>
 
       <Wrap>
-        <a>
+        <span>
           <img src="/images/slider-scales.jpg" alt="" />
-        </a>
+        </span>
       </Wrap>
     </Carousel>
   );
@@ -85,7 +85,7 @@ const Wrap = styled.div`
   cursor: pointer;
   position: relative;
 
-  a {
+  span {
     border-radius: 4px;
     box-shadow: rgb(0 0 0 / 69%) 0px 26px 30px -10px,
       rgb(0 0 0 / 73%) 0px 16px 10px -10px;

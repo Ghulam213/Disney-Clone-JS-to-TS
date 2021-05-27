@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Movie } from '../types';
 import styled from "styled-components";
 import db from "../firebase";
 
-const Detail = (props) => {
-  const { id } = useParams();
-  const [detailData, setDetailData] = useState({});
+
+
+const Detail = () => {
+  const { id } = useParams<{id: string}>();
+  const [detailData, setDetailData] = useState<Movie>();
 
   useEffect(() => {
     db.collection("movies")
@@ -13,7 +16,7 @@ const Detail = (props) => {
       .get()
       .then((doc) => {
         if (doc.exists) {
-          setDetailData(doc.data());
+          setDetailData(doc.data() as Movie);
         } else {
           console.log("no such document in firebase 🔥");
         }
@@ -22,6 +25,12 @@ const Detail = (props) => {
         console.log("Error getting document:", error);
       });
   }, [id]);
+
+  if (!detailData) {
+    return (
+      <h1>No data found</h1>
+    )
+  }
 
   return (
     <Container>

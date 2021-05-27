@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { auth, provider } from "../firebase";
+import firebase from 'firebase/app';
 import {
   selectUserName,
   selectUserPhoto,
@@ -10,11 +11,24 @@ import {
   setSignOutState,
 } from "../features/user/userSlice";
 
-const Header = (props) => {
+const Header = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const userName = useSelector(selectUserName);
-  const userPhoto = useSelector(selectUserPhoto);
+  const userName = useSelector<any, string>(selectUserName);
+  const userPhoto = useSelector<any, string>(selectUserPhoto);
+
+  const setUser = useCallback(
+    (user: firebase.User) => {
+      dispatch(
+        setUserLoginDetails({
+          name: user.displayName,
+          email: user.email,
+          photo: user.photoURL,
+        })
+      );
+    },
+    [dispatch]
+  );
 
   useEffect(() => {
     auth.onAuthStateChanged(async (user) => {
@@ -23,14 +37,16 @@ const Header = (props) => {
         history.push("/home");
       }
     });
-  }, [userName]);
+  }, [userName, history, setUser]);
 
   const handleAuth = () => {
     if (!userName) {
       auth
         .signInWithPopup(provider)
         .then((result) => {
-          setUser(result.user);
+          if (result.user){
+            setUser(result.user);
+          }
         })
         .catch((error) => {
           alert(error.message);
@@ -44,16 +60,6 @@ const Header = (props) => {
         })
         .catch((err) => alert(err.message));
     }
-  };
-
-  const setUser = (user) => {
-    dispatch(
-      setUserLoginDetails({
-        name: user.displayName,
-        email: user.email,
-        photo: user.photoURL,
-      })
-    );
   };
 
   return (
@@ -71,23 +77,23 @@ const Header = (props) => {
               <img src="/images/home-icon.svg" alt="HOME" />
               <span>HOME</span>
             </a>
-            <a>
+            <a href="/home">
               <img src="/images/search-icon.svg" alt="SEARCH" />
               <span>SEARCH</span>
             </a>
-            <a>
+            <a href="/home">
               <img src="/images/watchlist-icon.svg" alt="WATCHLIST" />
               <span>WATCHLIST</span>
             </a>
-            <a>
+            <a href="/home">
               <img src="/images/original-icon.svg" alt="ORIGINALS" />
               <span>ORIGINALS</span>
             </a>
-            <a>
+            <a href="/home">
               <img src="/images/movie-icon.svg" alt="MOVIES" />
               <span>MOVIES</span>
             </a>
-            <a>
+            <a href="/home">
               <img src="/images/series-icon.svg" alt="SERIES" />
               <span>SERIES</span>
             </a>
